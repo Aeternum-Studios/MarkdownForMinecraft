@@ -7,13 +7,14 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class MD extends JavaPlugin implements Listener {
+public class MD_ extends JavaPlugin implements Listener {
 
 //                             _   _____ 
 //                            | | | ____|
@@ -32,20 +33,30 @@ public class MD extends JavaPlugin implements Listener {
 
 	@EventHandler( priority = EventPriority.HIGHEST )
 	public void onAsyncChatEvent( AsyncPlayerChatEvent event ) {
-		if ( !event.getPlayer().hasPermission( "md.parse" ) ) {
-			return;
-		}
-		event.setMessage( parseMarkdown( event.getMessage() ) );
+		event.setMessage( parseMarkdown( event.getPlayer(), event.getMessage() ) );
 	}
 
-	public static String parseMarkdown( String message ) {
+	public static String parseMarkdown( Player player, String message ) {
 		String translated = message;
-		translated = replaceWith( translated, "(?<!\\\\)\\*\\*", ChatColor.COLOR_CHAR + "z", ChatColor.COLOR_CHAR + "Z" );
-		translated = replaceWith( translated, "(?<!\\\\)\\*", ChatColor.COLOR_CHAR + "x", ChatColor.COLOR_CHAR + "X" );
-		translated = replaceWith( translated, "(?<!\\\\)__", ChatColor.COLOR_CHAR + "v", ChatColor.COLOR_CHAR + "V" );
-		translated = replaceWith( translated, "(?<!\\\\)_", ChatColor.COLOR_CHAR + "q", ChatColor.COLOR_CHAR + "Q" );
-		translated = replaceWith( translated, "(?<!\\\\)~~", ChatColor.COLOR_CHAR + "m", ChatColor.COLOR_CHAR + "M" );
-		translated = replaceWith( translated, "(?<!\\\\)~", ChatColor.COLOR_CHAR + "w", ChatColor.COLOR_CHAR + "W" );
+		
+		if ( player.hasPermission( "md.parse.all" ) || player.hasPermission( "md.parse.bold" ) ) {
+			translated = replaceWith( translated, "(?<!\\\\)\\*\\*", ChatColor.COLOR_CHAR + "z", ChatColor.COLOR_CHAR + "Z" );
+		}
+		if ( player.hasPermission( "md.parse.all" ) || player.hasPermission( "md.parse.italic" ) ) {
+			translated = replaceWith( translated, "(?<!\\\\)\\*", ChatColor.COLOR_CHAR + "x", ChatColor.COLOR_CHAR + "X" );
+		}
+		if ( player.hasPermission( "md.parse.all" ) || player.hasPermission( "md.parse.underline" ) ) {
+			translated = replaceWith( translated, "(?<!\\\\)__", ChatColor.COLOR_CHAR + "v", ChatColor.COLOR_CHAR + "V" );
+		}
+		if ( player.hasPermission( "md.parse.all" ) || player.hasPermission( "md.parse.italic" ) ) {
+			translated = replaceWith( translated, "(?<!\\\\)_", ChatColor.COLOR_CHAR + "q", ChatColor.COLOR_CHAR + "Q" );
+		}
+		if ( player.hasPermission( "md.parse.all" ) || player.hasPermission( "md.parse.strikethrough" ) ) {
+			translated = replaceWith( translated, "(?<!\\\\)~~", ChatColor.COLOR_CHAR + "m", ChatColor.COLOR_CHAR + "M" );
+		}
+		if ( player.hasPermission( "md.parse.all" ) || player.hasPermission( "md.parse.magic" ) ) {
+			translated = replaceWith( translated, "(?<!\\\\)~", ChatColor.COLOR_CHAR + "w", ChatColor.COLOR_CHAR + "W" );
+		}
 
 		translated = translated.replace( "\\*", "*" ).replace( "\\_", "_" ).replace( "\\~", "~" );
 		

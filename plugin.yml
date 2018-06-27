@@ -1,9 +1,9 @@
-name: md
+name: md_
 author: Aeternum Network
-version: _5
+version: 5
 website: https://aeternum.network/
 description: Parses markdown for players
-main: m.d.MD
+main: m.d.MD_
 permissions:
-  md.parse:
-    default: true
+  md.parse.all:
+    default: op
